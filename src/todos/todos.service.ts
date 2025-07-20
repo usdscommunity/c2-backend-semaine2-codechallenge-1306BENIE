@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { Todo } from './models/todo.model';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
@@ -16,6 +16,11 @@ export class TodosService {
    * Créer une nouvelle tâche
    */
   create(createTodoDto: CreateTodoDto): Todo {
+    // Vérification d'unicité du titre (insensible à la casse)
+    const exists = this.todos.some((t) => t.title.trim().toLowerCase() === createTodoDto.title.trim().toLowerCase());
+    if (exists) {
+      throw new ConflictException('Une tâche avec ce titre existe déjà.');
+    }
     const now = new Date();
     const id: string = generateUuid();
     const todo: Todo = {
