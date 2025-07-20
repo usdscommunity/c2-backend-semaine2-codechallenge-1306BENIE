@@ -53,8 +53,12 @@ export class TodosController {
    */
   @Patch(':id')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
-  update(@Param('id', new ParseUUIDPipe()) id: string, @Body() updateTodoDto: UpdateTodoDto): Todo {
-    return this.todosService.update(id, updateTodoDto);
+  update(@Param('id', new ParseUUIDPipe()) id: string, @Body() updateTodoDto: UpdateTodoDto) {
+    const updated = this.todosService.update(id, updateTodoDto);
+    return {
+      message: `La tâche '${updated.title}' (ID: ${updated.id}) a été mise à jour avec succès.`,
+      todo: updated,
+    };
   }
 
   /**
