@@ -61,8 +61,11 @@ export class TodosController {
    * Supprimer une tâche
    */
   @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', new ParseUUIDPipe()) id: string): void {
-    this.todosService.remove(id);
+  @HttpCode(HttpStatus.OK) // On passe à 200 OK pour pouvoir renvoyer un message
+  remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    const deleted = this.todosService.remove(id);
+    return {
+      message: `La tâche '${deleted.title}' (ID: ${deleted.id}) a été supprimée avec succès.`,
+    };
   }
 }

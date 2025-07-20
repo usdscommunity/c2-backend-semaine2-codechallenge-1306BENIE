@@ -90,13 +90,14 @@ export class TodosService {
   }
 
   /**
-   * Supprimer une tâche
+   * Supprimer une tâche et retourner la tâche supprimée
    */
-  remove(id: string): void {
+  remove(id: string): Todo {
     const index = this.todos.findIndex((t) => t.id === id);
     if (index === -1) {
       throw new NotFoundException(`Tâche avec id ${id} non trouvée.`);
     }
-    this.todos.splice(index, 1);
+    const [deleted] = this.todos.splice(index, 1);
+    return deleted;
   }
 }
